@@ -11,10 +11,11 @@ const pdf = require('./pdf');
 router.post('/', authorize(), createSchema, create);
 router.get('/', authorize(), getAll);
 router.get('/:id', authorize(), getById);
+router.put('/:id', authorize(), update);
 
 
 router.get('/current', authorize(), getCurrent);
-router.put('/:id', authorize(), updateSchema, update);
+
 router.delete('/:id', authorize(), _delete);
 
 module.exports = router;

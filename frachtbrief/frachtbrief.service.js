@@ -32,22 +32,13 @@ async function create(params) {
 async function update(id, params) {
     const frachtbrief = await getFrachtbrief(id);
 
-    // validate
-    const usernameChanged = params.username && user.username !== params.username;
-    if (usernameChanged && await db.User.findOne({ where: { username: params.username } })) {
-        throw 'Username "' + params.username + '" is already taken';
-    }
-
-    // hash password if it was entered
-    if (params.password) {
-        params.hash = await bcrypt.hash(params.password, 10);
-    }
+   
 
     // copy params to user and save
-    Object.assign(user, params);
-    await user.save();
+    Object.assign(frachtbrief, params);
+    await frachtbrief.save();
 
-    return omitHash(user.get());
+    return omitHash(frachtbrief.get());
 }
 
 async function _delete(id) {
