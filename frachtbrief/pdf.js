@@ -1,4 +1,7 @@
 var fs = require('fs');
+const pdfService = require('./pdf.service');
+const frachtbriefService = require('./frachtbrief.service');
+
 //var pdflib = require('pdf-lib')
 const { degrees, PDFDocument, StandardFonts, rgb } = require('pdf-lib')
 
@@ -7,13 +10,15 @@ const existingPdfBytes = fs.readFileSync('./frachtbrief/bsas_test.pdf')
 
 
 module.exports = {
-    createPDF
+    createPDF,
+    getPDF
 
 }
 
 async function createPDF(json) {
 
 
+//const frachtid = req.params.id;
     
 
  
@@ -34,10 +39,11 @@ const firstPage = pages[0]
 const { width, height } = firstPage.getSize()
  
 // Draw a string of text diagonally across the first page
+console.log(json)
 firstPage.drawText(json.adresse, {
   x: 5,
   y: height / 2 + 300,
-  size: 12,
+  size: 30,
   font: helveticaFont
   
 })
@@ -45,11 +51,27 @@ firstPage.drawText(json.adresse, {
  
 // Serialize the PDFDocument to bytes (a Uint8Array)
 const pdfBytes = await pdfDoc.save()
+const blob = Buffer.from(pdfBytes);
+pdfService.create({pdf: blob})
+  .then(item => {
+    console.log(item)
+    frachtbriefService.update(json.id, {pdf_id: item.id})})
+
+
+
+}
+
+async function getPDF(id) {
+
+const obj = await pdfService.getById(id)
+
+const ausdb = Uint8Array.from(obj.pdf);
+
+
  
 
-fs.writeFile('test.pdf', pdfBytes, function (err) {
+fs.writeFile('test2.pdf', ausdb, function (err) {
     if (err) throw err;
     console.log('Replaced!');
   });
-
 }

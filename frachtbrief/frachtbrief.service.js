@@ -23,7 +23,7 @@ async function getById(id) {
 }
 
 async function create(params) {
-   
+   console.log(params)
 
     // save Frachtbrief
     await db.Frachtbrief.create(params);

@@ -4,6 +4,7 @@ const Joi = require('joi');
 const validateRequest = require('_middleware/validate-request');
 const authorize = require('_middleware/authorize')
 const frachtbriefService = require('./frachtbrief.service');
+const pdfService = require('./pdf.service');
 const pdf = require('./pdf');
 
 // routes
@@ -12,6 +13,10 @@ router.post('/', authorize(), createSchema, create);
 router.get('/', authorize(), getAll);
 router.get('/:id', authorize(), getById);
 router.put('/:id', authorize(), update);
+
+router.post('/pdf', authorize(), createPdf);
+
+
 
 
 router.get('/current', authorize(), getCurrent);
@@ -40,6 +45,14 @@ function create(req, res, next) {
         .catch(next);
 }
 
+function createPdf(req, res, next) {
+
+  
+
+    pdf.createPDF(req.body)
+        .then(() => res.json({ message: 'Pdf gespeichert' }))
+        .catch(next);
+}
 
 
 
