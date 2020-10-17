@@ -52,13 +52,14 @@ firstPage.drawText(json.adresse, {
 // Serialize the PDFDocument to bytes (a Uint8Array)
 const pdfBytes = await pdfDoc.save()
 const blob = Buffer.from(pdfBytes);
-pdfService.create({pdf: blob})
-  .then(item => {
-    console.log(item)
-    frachtbriefService.update(json.id, {pdf_id: item.id})})
+await pdfService.create({pdf: blob})
+  .then( async (item) => {
+    
+    await frachtbriefService.update(json.id, {pdf_id: item.id})})
 
+console.log('pdf durch')
 
-
+return await frachtbriefService.getById(json.id);
 }
 
 async function getPDF(id) {

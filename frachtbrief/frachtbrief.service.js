@@ -23,7 +23,7 @@ async function getById(id) {
 }
 
 async function create(params) {
-   console.log(params)
+   
 
     // save Frachtbrief
     await db.Frachtbrief.create(params);
@@ -38,6 +38,7 @@ async function update(id, params) {
     Object.assign(frachtbrief, params);
     await frachtbrief.save();
 
+    console.log('update durch')
     return omitHash(frachtbrief.get());
 }
 

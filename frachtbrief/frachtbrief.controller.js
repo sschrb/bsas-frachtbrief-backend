@@ -40,7 +40,6 @@ function create(req, res, next) {
   
 
     frachtbriefService.create(req.body)
-        .then(pdf.createPDF(req.body))
         .then(() => res.json({ message: 'Frachtbrief gespeichert' }))
         .catch(next);
 }
@@ -50,7 +49,7 @@ function createPdf(req, res, next) {
   
 
     pdf.createPDF(req.body)
-        .then(() => res.json({ message: 'Pdf gespeichert' }))
+        .then(frachtbrief => res.json(frachtbrief))
         .catch(next);
 }
 
