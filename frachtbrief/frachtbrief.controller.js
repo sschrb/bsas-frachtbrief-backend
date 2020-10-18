@@ -9,6 +9,7 @@ const pdf = require('./pdf');
 
 // routes
 
+router.get('/pdf/:id', authorize(), getPdfById);
 router.post('/', authorize(), createSchema, create);
 router.get('/', authorize(), getAll);
 router.get('/:id', authorize(), getById);
@@ -63,6 +64,13 @@ function getAll(req, res, next) {
 
 function getCurrent(req, res, next) {
     res.json(req.user);
+}
+
+function getPdfById(req, res, next) {
+    console.log(1);
+    pdfService.getPdfById(req.params.id)
+        .then(pdf => res.json(pdf))
+        .catch(next);
 }
 
 function getById(req, res, next) {

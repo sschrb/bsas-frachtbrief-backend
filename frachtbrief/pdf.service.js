@@ -6,7 +6,7 @@ const db = require('_helpers/db');
 module.exports = {
     
     
-    getById,
+    getPdfById,
     create,
     
     
@@ -16,7 +16,8 @@ module.exports = {
 
 
 
-async function getById(id) {
+async function getPdfById(id) {
+    console.log(2)
     return await getPdf(id);
 }
 
@@ -36,5 +37,6 @@ async function create(params) {
 async function getPdf(id) {
     const pdf = await db.pdf.findByPk(id);
     if (!pdf) throw 'pdf not found';
+    console.log(pdf)
     return pdf;
 }
