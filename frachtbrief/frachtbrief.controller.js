@@ -32,6 +32,10 @@ function createSchema(req, res, next) {
     const schema = Joi.object({
         adresse: Joi.string().required(),
         wagenummer: Joi.string().required(),
+        bahnhof: Joi.string().required(),
+        bahnhofscode: Joi.string().required(),
+        land: Joi.string().required(),
+        laendercode: Joi.string().required(),
     });
     validateRequest(req, next, schema);
 }
@@ -39,7 +43,7 @@ function createSchema(req, res, next) {
 function create(req, res, next) {
 
   
-
+console.log(req.body)
     frachtbriefService.create(req.body)
         .then(() => res.json({ message: 'Frachtbrief gespeichert' }))
         .catch(next);

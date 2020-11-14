@@ -6,7 +6,7 @@ const frachtbriefService = require('./frachtbrief.service');
 const { degrees, PDFDocument, StandardFonts, rgb } = require('pdf-lib')
 
 
-const existingPdfBytes = fs.readFileSync('./frachtbrief/bsas_test.pdf')
+const existingPdfBytes = fs.readFileSync('./frachtbrief/cim.pdf')
 
 
 module.exports = {
@@ -37,13 +37,14 @@ const firstPage = pages[0]
  
 // Get the width and height of the first page
 const { width, height } = firstPage.getSize()
- 
+ console.log(width)
+ console.log(height)
 // Draw a string of text diagonally across the first page
 console.log(json)
 firstPage.drawText(json.adresse, {
-  x: 5,
-  y: height / 2 + 300,
-  size: 30,
+  x: 64,
+  y: 793,
+  size: 12,
   font: helveticaFont
   
 })

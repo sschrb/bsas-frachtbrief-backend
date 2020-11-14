@@ -21,6 +21,10 @@ async function initialize() {
     db.Frachtbrief = require('../frachtbrief/frachtbrief.model')(sequelize);
     db.pdf = require('../frachtbrief/pdf.model')(sequelize);
 
+    db.Bahnhof = require('../bahnhof/bahnhof.model')(sequelize);
+    db.Adresse = require('../adresse/adresse.model')(sequelize);
+    db.Erklarung = require('../erklarung/erklarung.model')(sequelize);
+
     // sync all models with database
     await sequelize.sync();
 }

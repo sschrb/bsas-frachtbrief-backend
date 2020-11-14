@@ -12,6 +12,9 @@ app.use(cors());
 // api routes
 app.use('/users', require('./users/users.controller'));
 app.use('/frachtbrief', require('./frachtbrief/frachtbrief.controller'));
+app.use('/bahnhof', require('./bahnhof/bahnhof.controller'));
+app.use('/adresse', require('./adresse/adresse.controller'));
+app.use('/erklarung', require('./erklarung/erklarung.controller'));
 
 // global error handler
 app.use(errorHandler);
