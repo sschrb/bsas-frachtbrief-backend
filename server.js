@@ -15,6 +15,7 @@ app.use('/frachtbrief', require('./frachtbrief/frachtbrief.controller'));
 app.use('/bahnhof', require('./bahnhof/bahnhof.controller'));
 app.use('/adresse', require('./adresse/adresse.controller'));
 app.use('/erklarung', require('./erklarung/erklarung.controller'));
+app.use('/evu', require('./evu/evu.controller'));
 
 // global error handler
 app.use(errorHandler);

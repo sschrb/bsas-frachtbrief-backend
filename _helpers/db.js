@@ -24,6 +24,7 @@ async function initialize() {
     db.Bahnhof = require('../bahnhof/bahnhof.model')(sequelize);
     db.Adresse = require('../adresse/adresse.model')(sequelize);
     db.Erklarung = require('../erklarung/erklarung.model')(sequelize);
+    db.Evu = require('../evu/evu.model')(sequelize);
 
     // sync all models with database
     await sequelize.sync();
