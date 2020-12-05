@@ -16,6 +16,7 @@ app.use('/bahnhof', require('./bahnhof/bahnhof.controller'));
 app.use('/adresse', require('./adresse/adresse.controller'));
 app.use('/erklarung', require('./erklarung/erklarung.controller'));
 app.use('/evu', require('./evu/evu.controller'));
+app.use('/wagendaten', require('./wagendaten/wagendaten.controller'));
 
 // global error handler
 app.use(errorHandler);

@@ -30,12 +30,15 @@ module.exports = router;
 
 function createSchema(req, res, next) {
     const schema = Joi.object({
+        /*
         adresse: Joi.string().required(),
         wagenummer: Joi.string().required(),
         bahnhof: Joi.string().required(),
         bahnhofscode: Joi.string().required(),
         land: Joi.string().required(),
         laendercode: Joi.string().required(),
+        */
+       frachtbriefdata: Joi.object()
     });
     validateRequest(req, next, schema);
 }
