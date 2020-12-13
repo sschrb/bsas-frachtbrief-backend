@@ -13,12 +13,12 @@ function model(sequelize) {
         land: { type: DataTypes.STRING, allowNull: false },
         laendercode: { type: DataTypes.STRING, allowNull: false }
         */
-       frachtbriefdata: {type: DataTypes.JSON },
+       ladelistedata: {type: DataTypes.JSON },
        pdf_id: { type: DataTypes.INTEGER, allowNull: true },
         
     };
 
    
 
-    return sequelize.define('Frachtbrief', attributes);
+    return sequelize.define('Ladeliste', attributes);
 }
