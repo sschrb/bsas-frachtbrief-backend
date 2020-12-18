@@ -42,7 +42,7 @@ function create(req, res, next) {
   
 
     erklarungService.create(req.body)
-        .then(() => res.json({ message: 'Erklarung gespeichert' }))
+        .then(() => res.json({ message: 'Erklärung gespeichert' }))
         .catch(next);
 }
 

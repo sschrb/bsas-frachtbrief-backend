@@ -48,7 +48,7 @@ function create(req, res, next) {
   
 console.log(req.body)
     ladelisteService.create(req.body)
-        .then(() => res.json({ message: 'ladeliste gespeichert' }))
+        .then(() => res.json({ message: 'Ladeliste gespeichert' }))
         .catch(next);
 }
 

@@ -79,6 +79,6 @@ function update(req, res, next) {
 
 function _delete(req, res, next) {
     wagendatenService.delete(req.params.id)
-        .then(() => res.json({ message: 'wagendaten gelöscht' }))
+        .then(() => res.json({ message: 'Wagendaten gelöscht' }))
         .catch(next);
 }

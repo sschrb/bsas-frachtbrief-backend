@@ -85,6 +85,6 @@ function update(req, res, next) {
 
 function _delete(req, res, next) {
     ladegutService.delete(req.params.id)
-        .then(() => res.json({ message: 'ladegut gelöscht' }))
+        .then(() => res.json({ message: 'Ladegut gelöscht' }))
         .catch(next);
 }
