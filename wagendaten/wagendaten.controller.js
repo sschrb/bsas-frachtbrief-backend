@@ -35,7 +35,7 @@ function createSchema(req, res, next) {
 
         wagennummer: Joi.string().required(),
         halter: Joi.string().required().allow(''),
-        achsanzahl: Joi.string().required().allow(''),
+        //achsanzahl: Joi.string().required().allow(''),
         eigengewicht: Joi.string().required().allow('')
 
     });
@@ -47,7 +47,7 @@ function create(req, res, next) {
   
 
     wagendatenService.create(req.body)
-        .then(() => res.json({ message: 'wagendaten gespeichert' }))
+        .then(() => res.json({ message: 'Wagendaten gespeichert' }))
         .catch(next);
 }
 
