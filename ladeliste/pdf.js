@@ -199,12 +199,41 @@ docDefinition1.content.push(
     ]
   };
   
-  var pdfDoc = printer.createPdfKitDocument(docDefinition1);
+  var pdfDoc = printer.createPdfKitDocument(docDefinition1)
+    
+
+    
+  
  
   pdfDoc.pipe(fs.createWriteStream('basics.pdf'));
-  pdfDoc.end();
   
+  let buffers = [];
+  pdfDoc.on('data', buffers.push.bind(buffers));
+  pdfDoc.on('end', async () => {
 
+    let pdfData = Buffer.concat(buffers);
+
+    console.log(buffers)
+    console.log('#############################################################################################################')
+    console.log(pdfData)
+    await pdfService.create({pdf: pdfData})
+    .then( async (item) => {
+      
+      await ladelisteService.update(json.id, {pdf_id: item.id})})
+  
+  console.log('pdf durch')
+
+});
+
+
+//end buffer
+pdfDoc.end();
+  
+  
+ 
+  
+  
+  return await ladelisteService.getById(json.id);
 
 }
 
