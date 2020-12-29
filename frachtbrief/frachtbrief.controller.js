@@ -38,7 +38,8 @@ function createSchema(req, res, next) {
         land: Joi.string().required(),
         laendercode: Joi.string().required(),
         */
-       frachtbriefdata: Joi.object()
+       frachtbriefdata: Joi.object(),
+       status: Joi.string(),
     });
     validateRequest(req, next, schema);
 }

@@ -176,7 +176,7 @@ docDefinition1.content.push(
     
   
  
-  pdfDoc.pipe(fs.createWriteStream('basics.pdf'));
+  
   
   let buffers = [];
   pdfDoc.on('data', buffers.push.bind(buffers));

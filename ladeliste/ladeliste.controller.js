@@ -38,7 +38,8 @@ function createSchema(req, res, next) {
         land: Joi.string().required(),
         laendercode: Joi.string().required(),
         */
-       ladelistedata: Joi.object()
+       ladelistedata: Joi.object(),
+       status: Joi.string(),
     });
     validateRequest(req, next, schema);
 }
