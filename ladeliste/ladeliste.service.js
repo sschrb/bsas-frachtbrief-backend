@@ -7,12 +7,19 @@ module.exports = {
     
     getAll,
     getById,
+    getAllStatus,
     create,
     update,
     delete: _delete
 };
 
-
+async function getAllStatus(wert) {
+    return await db.Ladeliste.findAll({
+        where: {
+          status: wert
+        }
+      });
+}
 
 async function getAll() {
     return await db.Ladeliste.findAll();

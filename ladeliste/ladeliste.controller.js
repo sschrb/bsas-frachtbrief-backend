@@ -12,6 +12,7 @@ const pdf = require('./pdf');
 router.get('/pdf/:id', authorize(), getPdfById);
 router.post('/', authorize(), createSchema, create);
 router.get('/', authorize(), getAll);
+router.get('/status/:status', authorize(), getAllStatus);
 router.get('/:id', authorize(), getById);
 router.put('/:id', authorize(), update);
 
@@ -64,6 +65,11 @@ function createPdf(req, res, next) {
 }
 
 
+function getAllStatus(req, res, next) {
+    ladelisteService.getAllStatus(req.params.status)
+        .then(ladeliste => res.json(ladeliste))
+        .catch(next);
+}
 
 function getAll(req, res, next) {
     ladelisteService.getAll()

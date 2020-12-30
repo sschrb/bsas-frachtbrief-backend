@@ -7,12 +7,20 @@ module.exports = {
     
     getAll,
     getAllVorlagen,
+    getAllStatus,
     getById,
     create,
     update,
     delete: _delete
 };
 
+async function getAllStatus(wert) {
+    return await db.Frachtbrief.findAll({
+        where: {
+          status: wert
+        }
+      });
+}
 
 async function getAllVorlagen() {
     return await db.Frachtbrief.findAll({
