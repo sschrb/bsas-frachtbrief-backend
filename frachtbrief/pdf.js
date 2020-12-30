@@ -61,8 +61,8 @@ style: 'tableExample',
 table: {
   widths: ['*', '*', '*'],
   body: [
-    ['Absender\n Name Absender\n Land-PLZ Ort', 'Empfänger\n [Name Empfänger]\n [Land-PLZ Ort]', 'Datum\n [Abweichendes Feld zu 29]'],
-    ['Abgangsbahnhof\n [Abgangsbahnhof]-[Land]', 'Zielbahnhof\n [Zielbahnhof Name]-[Land]', 'Referenz\n'+json.ladelistedata.refnr]
+    ['Absender\n'+ data.frachtbriefdata.adresse1.name +'\n'+ data.frachtbriefdata.adresse1.ort, 'Empfänger\n' + data.frachtbriefdata.adresse2.name +'\n'+ data.frachtbriefdata.adresse2.ort , 'Datum\n' + json.ladelistedata.datum.substring(0,10)],
+    ['Abgangsbahnhof\n' + data.frachtbriefdata.bahnhof1.name +'\n'+ data.frachtbriefdata.bahnhof1.land, 'Zielbahnhof\n'+ data.frachtbriefdata.bahnhof7.name +'\n'+ data.frachtbriefdata.bahnhof7.land, 'Referenz\n'+json.ladelistedata.refnr]
   ]
 }
 }, ' ', ' ')
@@ -257,6 +257,8 @@ ortDatumAusstellung.setText(json.frachtbriefdata.ausstellung.ort+' '+json.fracht
 
 
 
+const kommerzBed = form.getTextField('Conditions commerciales13')
+kommerzBed.setText(json.frachtbriefdata.kommerziellebedingungen)
 
 const ubernahmeOrt = form.getTextField('Lieu2-16')
 ubernahmeOrt.setText(json.frachtbriefdata.ubernahmeort.name)
