@@ -173,11 +173,6 @@ docDefinition1.content.push(
   var pdfDoc = printer.createPdfKitDocument(docDefinition1)
     
 
-    
-  
- 
-  
-  
   let buffers = [];
   pdfDoc.on('data', buffers.push.bind(buffers));
   pdfDoc.on('end', async () => {
@@ -200,12 +195,15 @@ docDefinition1.content.push(
 //end buffer
 pdfDoc.end();
   
-  
- 
-  
+
+
+
+
+
+
   
   return await ladelisteService.getById(json.id);
-
+  
 }
 
 async function getPDF(id) {

@@ -40,6 +40,7 @@ function createSchema(req, res, next) {
         */
        ladelistedata: Joi.object(),
        status: Joi.string(),
+       vorlage: Joi.string(),
     });
     validateRequest(req, next, schema);
 }

@@ -16,6 +16,10 @@ function model(sequelize) {
        frachtbriefdata: {type: DataTypes.JSON },
        pdf_id: { type: DataTypes.INTEGER, allowNull: true },
        status: { type: DataTypes.STRING, allowNull: true },
+       pdf_id_komplett: { type: DataTypes.INTEGER, allowNull: true },
+       pdf_id_ladeliste: { type: DataTypes.INTEGER, allowNull: true },
+       vorlage: { type: DataTypes.STRING, allowNull: true },
+       ladeliste_id: { type: DataTypes.INTEGER, allowNull: true },
         
     };
 

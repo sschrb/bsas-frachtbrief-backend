@@ -12,6 +12,7 @@ const pdf = require('./pdf');
 router.get('/pdf/:id', authorize(), getPdfById);
 router.post('/', authorize(), createSchema, create);
 router.get('/', authorize(), getAll);
+router.get('/vorlagen', authorize(), getAllVorlagen);
 router.get('/:id', authorize(), getById);
 router.put('/:id', authorize(), update);
 
@@ -40,6 +41,7 @@ function createSchema(req, res, next) {
         */
        frachtbriefdata: Joi.object(),
        status: Joi.string(),
+       vorlage: Joi.string(),
     });
     validateRequest(req, next, schema);
 }
@@ -63,6 +65,11 @@ function createPdf(req, res, next) {
 }
 
 
+function getAllVorlagen(req, res, next) {
+    frachtbriefService.getAllVorlagen()
+        .then(frachtbrief => res.json(frachtbrief))
+        .catch(next);
+}
 
 function getAll(req, res, next) {
     frachtbriefService.getAll()

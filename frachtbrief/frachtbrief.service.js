@@ -6,6 +6,7 @@ const db = require('_helpers/db');
 module.exports = {
     
     getAll,
+    getAllVorlagen,
     getById,
     create,
     update,
@@ -13,6 +14,13 @@ module.exports = {
 };
 
 
+async function getAllVorlagen() {
+    return await db.Frachtbrief.findAll({
+        where: {
+          vorlage: 'true'
+        }
+      });
+}
 
 async function getAll() {
     return await db.Frachtbrief.findAll();
