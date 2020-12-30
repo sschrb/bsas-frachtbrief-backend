@@ -17,6 +17,7 @@ router.get('/:id', authorize(), getById);
 router.put('/:id', authorize(), update);
 
 router.post('/pdf', authorize(), createPdf);
+router.post('/pdffinal', authorize(), createFinalPdf);
 
 
 
@@ -59,7 +60,16 @@ function createPdf(req, res, next) {
 
   
 
-    pdf.createPDF(req.body)
+    pdf.createFinalPDF(req.body)
+        .then(frachtbrief => res.json(frachtbrief))
+        .catch(next);
+}
+
+function createFinalPdf(req, res, next) {
+
+  
+
+    pdf.createFinalPDF(req.body)
         .then(frachtbrief => res.json(frachtbrief))
         .catch(next);
 }

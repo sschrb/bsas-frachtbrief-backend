@@ -1,19 +1,543 @@
 var fs = require('fs');
 const pdfService = require('./pdf.service');
 const frachtbriefService = require('./frachtbrief.service');
+var fonts = {
+	Courier: {
+    normal: 'Courier',
+    bold: 'Courier-Bold',
+    italics: 'Courier-Oblique',
+    bolditalics: 'Courier-BoldOblique'
+  },
+  Roboto: {
+    normal: 'Helvetica',
+    bold: 'Helvetica-Bold',
+    italics: 'Helvetica-Oblique',
+    bolditalics: 'Helvetica-BoldOblique'
+  },
+  Times: {
+    normal: 'Times-Roman',
+    bold: 'Times-Bold',
+    italics: 'Times-Italic',
+    bolditalics: 'Times-BoldItalic'
+  },
+  Symbol: {
+    normal: 'Symbol'
+  },
+  ZapfDingbats: {
+    normal: 'ZapfDingbats'
+  }
+	};
+
+var PdfPrinter = require('pdfmake/src/printer');
+var printer = new PdfPrinter(fonts);
 
 //var pdflib = require('pdf-lib')
 const { degrees, PDFDocument, StandardFonts, rgb } = require('pdf-lib')
 
 
 const existingPdfBytes = fs.readFileSync('./frachtbrief/cim.pdf')
+const dateinameLadeliste = Math.random().toString(36).substring(7);
 
 
 module.exports = {
     createPDF,
-    getPDF
+    getPDF,
+    createFinalPDF
 
 }
+
+async function createFinalPDF(data) {
+console.log(data)
+  var json = data.frachtbriefdata.ladeliste
+var i = 1;
+
+
+var docDefinition1 = {
+  content: []
+}
+docDefinition1.content.push({text:'Ladeliste', fontSize: 14}, ' ')
+docDefinition1.content.push({
+style: 'tableExample',
+table: {
+  widths: ['*', '*', '*'],
+  body: [
+    ['Absender\n Name Absender\n Land-PLZ Ort', 'Empfänger\n [Name Empfänger]\n [Land-PLZ Ort]', 'Datum\n [Abweichendes Feld zu 29]'],
+    ['Abgangsbahnhof\n [Abgangsbahnhof]-[Land]', 'Zielbahnhof\n [Zielbahnhof Name]-[Land]', 'Referenz\n'+json.ladelistedata.refnr]
+  ]
+}
+}, ' ', ' ')
+
+var gesamtsumme = {
+liter: 0,
+masse: 0,
+tara: 0,
+bruttogew: 0,
+}
+
+for(ladegut in json.ladelistedata){
+//console.log(json.ladelistedata[ladegut].ladegut)
+if(json.ladelistedata[ladegut].ladegut && json.ladelistedata[ladegut].ladegut.nhm){
+var zwischensumme = {
+liter: 0,
+masse: 0,
+tara: 0,
+bruttogew: 0,
+}
+  var basetable = {
+    style: 'tableExample',
+    table: {
+      headerRows: 1,
+      // dontBreakRows: true,
+      keepWithHeaderRows: 1,
+      widths: ['auto', 'auto', 'auto', 145,'auto', 'auto', 'auto','auto', 'auto', 'auto'],
+      body: [
+        [{text: 'Nr.', fontSize: 8}, {text: 'Wagennummer', fontSize: 8}, {text: 'Achs-\n anzahl', fontSize: 8}, {text: 'Bezeichnung des Gutes', fontSize: 8, alignment: 'center'}, {text: 'Liter', fontSize: 8}, {text: 'Dichte', fontSize: 8}, {text: 'RID', fontSize: 8}, {text: 'Masse\nLadung (kg)', fontSize: 8}, {text: 'Tara Wagen\n(kg)', fontSize: 8}, {text:'Brutto Gew.\nWagen (kg)', fontSize: 8}],
+        
+                ]
+    }
+  }
+  for(wagen in json.ladelistedata[ladegut].wagen){
+    console.log(json.ladelistedata[ladegut].wagen[wagen])
+
+    zwischensumme.masse= (json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte) + zwischensumme.masse;
+    zwischensumme.liter= Number(json.ladelistedata[ladegut].wagen[wagen].liter) + zwischensumme.liter
+    zwischensumme.tara=json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht + zwischensumme.tara
+    zwischensumme.bruttogew=(json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte) + json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht + zwischensumme.bruttogew
+
+    basetable.table.body.push( [{text: i, fontSize: 8}, {text: json.ladelistedata[ladegut].wagen[wagen].wagendaten.wagennummer, fontSize: 8},
+       {text: json.ladelistedata[ladegut].wagen[wagen].wagendaten.achsanzahl, fontSize: 8}, 
+       {text: json.ladelistedata[ladegut].ladegut.bezeichnung, fontSize: 8, alignment: 'center'}, 
+       {text: json.ladelistedata[ladegut].wagen[wagen].liter, fontSize: 8}, 
+       {text: json.ladelistedata[ladegut].ladegut.dichte, fontSize: 8}, 
+       {text: json.ladelistedata[ladegut].ladegut.rid, fontSize: 8}, 
+       {text: (json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte).toFixed(2), fontSize: 8}, 
+       {text: json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht, fontSize: 8}, 
+       {text: ((json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte) + json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht).toFixed(2), fontSize: 8}],
+)
+    i++;
+  }
+
+
+
+  basetable.table.body.push([{text: 'Zwischensumme:', colSpan: 4, fontSize: 8, alignment: 'right' },{},{},{}, {text: zwischensumme.liter.toFixed(2), fontSize: 8}, {text: 'n.n.', fontSize: 8}, {text: 'n.n.', fontSize: 8}, {text: zwischensumme.masse.toFixed(2), fontSize: 8}, {text: zwischensumme.tara.toFixed(2), fontSize: 8}, {text: zwischensumme.bruttogew.toFixed(2), fontSize: 8}],
+  )
+  gesamtsumme.masse = zwischensumme.masse + gesamtsumme.masse
+  gesamtsumme.liter = zwischensumme.liter + gesamtsumme.liter
+  gesamtsumme.tara = zwischensumme.tara + gesamtsumme.tara
+  gesamtsumme.bruttogew = zwischensumme.bruttogew + gesamtsumme.bruttogew
+
+
+
+  docDefinition1.content.push(basetable)
+docDefinition1.content.push(
+
+  
+  ' ',
+  
+  {text:'Bemerkung:\n' +json.ladelistedata[ladegut].ladegut.bemerkung, fontSize: 8},
+  ' ',
+  {text:'NHM-Code: ' +json.ladelistedata[ladegut].ladegut.nhm, fontSize: 8},
+  
+  ' ',
+  ' ',
+
+
+
+)
+
+}
+
+
+
+
+
+}
+
+docDefinition1.content.push(
+' ',
+    ' ',
+    
+    {
+      style: 'tableExample',
+      table: {
+        headerRows: 1,
+        // dontBreakRows: true,
+        keepWithHeaderRows: 1,
+        widths: [259, 'auto', 'auto', 'auto','auto', 42, 'auto'],
+        body: [
+            [{text: 'Gesamtsumme:', fontSize: 8, alignment: 'right' }, {text: gesamtsumme.liter.toFixed(2)+'\n(I Ladung)', fontSize: 8}, {text: 'n.n.', fontSize: 8}, {text: 'n.n.', fontSize: 8}, {text: gesamtsumme.masse.toFixed(2)+'\n(kg Ladung)', fontSize: 8}, {text: gesamtsumme.tara+'\n(kg Tara)', fontSize: 8}, {text:gesamtsumme.bruttogew.toFixed(2)+'\n(kg Brutto)', fontSize: 8}],
+
+                  ]
+      }
+    },
+
+)
+
+
+
+var pdfLadeliste = printer.createPdfKitDocument(docDefinition1)
+pdfLadeliste.pipe(fs.createWriteStream(dateinameLadeliste));
+pdfLadeliste.end();
+
+
+
+
+
+console.log("2. PDF beginnt")
+
+
+
+
+
+//################################################################################################################################
+
+
+
+//const frachtid = req.params.id;
+    
+
+ 
+  json = data
+
+
+// Load a PDFDocument from the existing PDF bytes
+const pdfDoc = await PDFDocument.load(existingPdfBytes)
+
+
+const form = pdfDoc.getForm()
+const absender = form.getTextField('Expéditeur1')
+absender.setText([json.frachtbriefdata.adresse1.name, json.frachtbriefdata.adresse1.strasse, json.frachtbriefdata.adresse1.ort].join('\n'))
+
+
+const absenderMail = form.getTextField('E-Mail0')
+absenderMail.setText(json.frachtbriefdata.adresse1.mail)
+
+
+const absenderTel = form.getTextField('Tel0')
+absenderTel.setText(json.frachtbriefdata.adresse1.telefon)
+
+
+
+
+
+
+
+const ablieferungsOrtCode = form.getTextField('DIUM12')
+ablieferungsOrtCode.setText(json.frachtbriefdata.bahnhof7.bahnhofscode)
+
+const ablieferungsOrtBahnhof = form.getTextField('Gare')
+ablieferungsOrtBahnhof.setText(json.frachtbriefdata.bahnhof7.name)
+
+const ablieferungsOrtLand = form.getTextField('Pays')
+ablieferungsOrtLand.setText(json.frachtbriefdata.bahnhof7.land)
+
+
+const empfanger = form.getTextField('Destinataire4')
+empfanger.setText([json.frachtbriefdata.adresse2.name, json.frachtbriefdata.adresse2.strasse, json.frachtbriefdata.adresse2.ort].join('\n'))
+
+const empfangerMail = form.getTextField('E-Mail')
+empfangerMail.setText(json.frachtbriefdata.adresse2.mail)
+
+const empfangerTel = form.getTextField('Tel')
+empfangerTel.setText(json.frachtbriefdata.adresse2.telefon)
+
+
+const erklarungAbsender = form.getTextField('Déclaration expéditeur7')
+erklarungAbsender.setText(json.frachtbriefdata.erklarung.code)
+
+const absenderRef = form.getTextField('Info destinataire15')
+absenderRef.setText(json.frachtbriefdata.refnr)
+
+const absenderRef2 = form.getTextField('Référence Expéditeur8')
+absenderRef2.setText(json.frachtbriefdata.refnr)
+
+
+const ortDatumAusstellung = form.getTextField('Lieu et date d\'établissement29')
+ortDatumAusstellung.setText(json.frachtbriefdata.ausstellung.ort+' '+json.frachtbriefdata.ausstellung.datum.substring(0,10))
+
+
+
+
+const ubernahmeOrt = form.getTextField('Lieu2-16')
+ubernahmeOrt.setText(json.frachtbriefdata.ubernahmeort.name)
+
+
+const ubernahmeOrtDate = form.getTextField('Mois/jour/heure')
+let monat = json.frachtbriefdata.ubernahmeort.datum.substring(5,7)
+let tag = json.frachtbriefdata.ubernahmeort.datum.substring(8,10)
+let stunde = json.frachtbriefdata.ubernahmeort.datum.substring(11,13)
+ubernahmeOrtDate.setText(monat + tag + stunde)
+
+
+
+
+
+
+const wagennummer = form.getTextField('Wagon n°0-18')
+wagennummer.setText('gem. Ladeliste')
+
+
+const radioGroupCIMCUV = form.getRadioGroup('Gruppieren1')
+if(json.frachtbriefdata.type == 'CUV'){
+  radioGroupCIMCUV.select('Auswahl2')
+} else {
+  radioGroupCIMCUV.select('Auswahl1')
+}
+
+
+//Frank fracht ankreuzen
+const radioGroupFracht = form.getRadioGroup('Gruppieren2')
+radioGroupFracht.select('Auswahl1')
+
+// Embed the Helvetica font
+const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
+ 
+// Get the first page of the document
+const pages = pdfDoc.getPages()
+//const firstPage = pages[0]
+ 
+// Get the width and height of the first page
+//const { width, height } = firstPage.getSize()
+
+// Draw a string of text diagonally across the first page
+console.log(json)
+
+
+for (i = 0; i < pages.length; i++){
+  const firstPage = pages[i]
+console.log(i)
+console.log(i%2)
+console.log((i%2)==0)
+if((i%2)==0){
+
+  
+//andere beförderer name
+firstPage.drawText(json.frachtbriefdata.aBeforderer1.name, {
+  x: 174,
+  y: 145,
+  size: 8,
+  font: helveticaFont,
+  
+  
+  
+})
+firstPage.drawText(json.frachtbriefdata.aBeforderer2.name, {
+  x: 174,
+  y: 138,
+  size: 8,
+  font: helveticaFont,
+  
+  
+  
+})
+firstPage.drawText(json.frachtbriefdata.aBeforderer3.name, {
+  x: 174,
+  y: 131,
+  size: 8,
+  font: helveticaFont,
+  
+  
+  
+})
+firstPage.drawText(json.frachtbriefdata.aBeforderer4.name, {
+  x: 174,
+  y: 124,
+  size: 8,
+  font: helveticaFont,
+  
+  
+  
+})
+firstPage.drawText(json.frachtbriefdata.aBeforderer5.name, {
+  x: 174,
+  y: 117,
+  size: 8,
+  font: helveticaFont,
+  
+  
+  
+})
+firstPage.drawText(json.frachtbriefdata.aBeforderer6.name, {
+  x: 174,
+  y: 110,
+  size: 8,
+  font: helveticaFont,
+  
+  
+  
+})
+
+//andere beförderer strecke
+firstPage.drawText(json.frachtbriefdata.aBeforderer1.strecke, {
+  x: 360,
+  y: 145,
+  size: 8,
+  font: helveticaFont,
+  
+  
+  
+})
+firstPage.drawText(json.frachtbriefdata.aBeforderer2.strecke, {
+  x: 360,
+  y: 138,
+  size: 8,
+  font: helveticaFont,
+  
+  
+  
+})
+firstPage.drawText(json.frachtbriefdata.aBeforderer3.strecke, {
+  x: 360,
+  y: 131,
+  size: 8,
+  font: helveticaFont,
+  
+  
+  
+})
+firstPage.drawText(json.frachtbriefdata.aBeforderer4.strecke, {
+  x: 360,
+  y: 124,
+  size: 8,
+  font: helveticaFont,
+  
+  
+  
+})
+firstPage.drawText(json.frachtbriefdata.aBeforderer5.strecke, {
+  x: 360,
+  y: 117,
+  size: 8,
+  font: helveticaFont,
+  
+  
+  
+})
+firstPage.drawText(json.frachtbriefdata.aBeforderer6.strecke, {
+  x: 360,
+  y: 110,
+  size: 8,
+  font: helveticaFont,
+  
+  
+  
+})
+ 
+}
+
+
+}
+
+
+const firstDonorPdfDoc = await PDFDocument.load(fs.readFileSync(dateinameLadeliste))
+
+const totalPages = firstDonorPdfDoc.getPageCount()
+for(i = 0; i < totalPages; i++){
+console.log(i)
+const [firstDonorPage] = await pdfDoc.copyPages(firstDonorPdfDoc, [i])
+await pdfDoc.addPage(firstDonorPage)
+}
+
+
+for(i = totalPages-1; i >= 0; i--){
+  console.log(i)
+  const [firstDonorPage] = await pdfDoc.copyPages(firstDonorPdfDoc, [i])
+  await pdfDoc.insertPage(8, firstDonorPage)
+  }
+
+  for(i = totalPages-1; i >= 0; i--){
+    console.log(i)
+    const [firstDonorPage] = await pdfDoc.copyPages(firstDonorPdfDoc, [i])
+    await pdfDoc.insertPage(6, firstDonorPage)
+    }
+
+
+    for(i = totalPages-1; i >= 0; i--){
+      console.log(i)
+      const [firstDonorPage] = await pdfDoc.copyPages(firstDonorPdfDoc, [i])
+      await pdfDoc.insertPage(4, firstDonorPage)
+      }
+for(i = totalPages-1; i >= 0; i--){
+  console.log(i)
+  const [firstDonorPage] = await pdfDoc.copyPages(firstDonorPdfDoc, [i])
+  await pdfDoc.insertPage(2, firstDonorPage)
+  }
+
+
+
+
+
+
+ 
+// Serialize the PDFDocument to bytes (a Uint8Array)
+const pdfBytes = await pdfDoc.save()
+
+
+
+fs.writeFile('test3.pdf', pdfBytes, function (err) {
+  if (err) throw err;
+  console.log('Replaced!');
+});
+
+
+
+const blob = Buffer.from(pdfBytes);
+await pdfService.create({pdf: blob})
+  .then( async (item) => {
+    
+    await frachtbriefService.update(json.id, {pdf_id_komplett: item.id})})
+
+console.log('pdf durch')
+console.log(dateinameLadeliste)
+
+
+fs.unlink(dateinameLadeliste, (err) => {
+  if (err) {
+    console.error(err)
+    return
+  }} )
+
+return await frachtbriefService.getById(json.id);
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 async function createPDF(json) {
 
