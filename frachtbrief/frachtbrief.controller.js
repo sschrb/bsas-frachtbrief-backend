@@ -60,7 +60,7 @@ function createPdf(req, res, next) {
 
   
 
-    pdf.createFinalPDF(req.body)
+    pdf.createPDF(req.body)
         .then(frachtbrief => res.json(frachtbrief))
         .catch(next);
 }

@@ -94,10 +94,10 @@ var zwischensumme = {
     for(wagen in json.ladelistedata[ladegut].wagen){
       console.log(json.ladelistedata[ladegut].wagen[wagen])
 
-      zwischensumme.masse= (json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte) + zwischensumme.masse;
+      zwischensumme.masse= ((json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte)/1000) + zwischensumme.masse;
       zwischensumme.liter= Number(json.ladelistedata[ladegut].wagen[wagen].liter) + zwischensumme.liter
       zwischensumme.tara=json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht + zwischensumme.tara
-      zwischensumme.bruttogew=(json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte) + json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht + zwischensumme.bruttogew
+      zwischensumme.bruttogew=((json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte)/1000) + json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht + zwischensumme.bruttogew
 
       basetable.table.body.push( [{text: i, fontSize: 8}, {text: json.ladelistedata[ladegut].wagen[wagen].wagendaten.wagennummer, fontSize: 8},
          {text: json.ladelistedata[ladegut].wagen[wagen].wagendaten.achsanzahl, fontSize: 8}, 
@@ -105,9 +105,9 @@ var zwischensumme = {
          {text: json.ladelistedata[ladegut].wagen[wagen].liter, fontSize: 8}, 
          {text: json.ladelistedata[ladegut].ladegut.dichte, fontSize: 8}, 
          {text: json.ladelistedata[ladegut].ladegut.rid, fontSize: 8}, 
-         {text: (json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte).toFixed(2), fontSize: 8}, 
+         {text: ((json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte)/1000).toFixed(2), fontSize: 8}, 
          {text: json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht, fontSize: 8}, 
-         {text: ((json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte) + json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht).toFixed(2), fontSize: 8}],
+         {text: (((json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte)/1000) + json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht).toFixed(2), fontSize: 8}],
 )
       i++;
     }

@@ -47,6 +47,8 @@ module.exports = {
 }
 
 async function createFinalPDF(data) {
+
+  var ridcheck = false;
 console.log(data)
   var json = data.frachtbriefdata.ladeliste
 var i = 1;
@@ -61,8 +63,8 @@ style: 'tableExample',
 table: {
   widths: ['*', '*', '*'],
   body: [
-    ['Absender\n'+ data.frachtbriefdata.adresse1.name +'\n'+ data.frachtbriefdata.adresse1.ort, 'Empfänger\n' + data.frachtbriefdata.adresse2.name +'\n'+ data.frachtbriefdata.adresse2.ort , 'Datum\n' + json.ladelistedata.datum.substring(0,10)],
-    ['Abgangsbahnhof\n' + data.frachtbriefdata.bahnhof1.name +'\n'+ data.frachtbriefdata.bahnhof1.land, 'Zielbahnhof\n'+ data.frachtbriefdata.bahnhof7.name +'\n'+ data.frachtbriefdata.bahnhof7.land, 'Referenz\n'+json.ladelistedata.refnr]
+    ['Absender\n'+ data.frachtbriefdata.adresse1.name +'\n'+ data.frachtbriefdata.adresse1.ort, 'Empfänger\n' + data.frachtbriefdata.adresse2.name +'\n'+ data.frachtbriefdata.adresse2.ort , 'Datum\n' + (json.ladelistedata.datum).slice(0, 10).split('-').reverse().join('/')],
+    ['Abgangsbahnhof\n' + data.frachtbriefdata.bahnhof1.name +'\n'+ data.frachtbriefdata.bahnhof1.land, 'Zielbahnhof\n'+ data.frachtbriefdata.bahnhof7.name +'\n'+ data.frachtbriefdata.bahnhof7.land, 'Referenz\n'+data.frachtbriefdata.refnr]
   ]
 }
 }, ' ', ' ')
@@ -76,7 +78,20 @@ bruttogew: 0,
 
 for(ladegut in json.ladelistedata){
 //console.log(json.ladelistedata[ladegut].ladegut)
+
+
+
+
+
+
 if(json.ladelistedata[ladegut].ladegut && json.ladelistedata[ladegut].ladegut.nhm){
+
+
+  if(json.ladelistedata[ladegut].ladegut.rid == 'Ja'){
+    ridcheck = true;
+  }
+
+
 var zwischensumme = {
 liter: 0,
 masse: 0,
@@ -99,10 +114,10 @@ bruttogew: 0,
   for(wagen in json.ladelistedata[ladegut].wagen){
     console.log(json.ladelistedata[ladegut].wagen[wagen])
 
-    zwischensumme.masse= (json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte) + zwischensumme.masse;
+    zwischensumme.masse= ((json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte)/1000) + zwischensumme.masse;
     zwischensumme.liter= Number(json.ladelistedata[ladegut].wagen[wagen].liter) + zwischensumme.liter
     zwischensumme.tara=json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht + zwischensumme.tara
-    zwischensumme.bruttogew=(json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte) + json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht + zwischensumme.bruttogew
+    zwischensumme.bruttogew=((json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte)/1000) + json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht + zwischensumme.bruttogew
 
     basetable.table.body.push( [{text: i, fontSize: 8}, {text: json.ladelistedata[ladegut].wagen[wagen].wagendaten.wagennummer, fontSize: 8},
        {text: json.ladelistedata[ladegut].wagen[wagen].wagendaten.achsanzahl, fontSize: 8}, 
@@ -110,9 +125,9 @@ bruttogew: 0,
        {text: json.ladelistedata[ladegut].wagen[wagen].liter, fontSize: 8}, 
        {text: json.ladelistedata[ladegut].ladegut.dichte, fontSize: 8}, 
        {text: json.ladelistedata[ladegut].ladegut.rid, fontSize: 8}, 
-       {text: (json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte).toFixed(2), fontSize: 8}, 
+       {text: ((json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte)/1000).toFixed(2), fontSize: 8}, 
        {text: json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht, fontSize: 8}, 
-       {text: ((json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte) + json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht).toFixed(2), fontSize: 8}],
+       {text: (((json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte)/1000) + json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht).toFixed(2), fontSize: 8}],
 )
     i++;
   }
@@ -223,7 +238,8 @@ absenderTel.setText(json.frachtbriefdata.adresse1.telefon)
 
 
 const ablieferungsOrtCode = form.getTextField('DIUM12')
-ablieferungsOrtCode.setText(json.frachtbriefdata.bahnhof7.bahnhofscode)
+ablieferungsOrtCode.setText(json.frachtbriefdata.bahnhof7.laendercode + json.frachtbriefdata.bahnhof7.bahnhofscode)
+
 
 const ablieferungsOrtBahnhof = form.getTextField('Gare')
 ablieferungsOrtBahnhof.setText(json.frachtbriefdata.bahnhof7.name)
@@ -253,8 +269,11 @@ absenderRef2.setText(json.frachtbriefdata.refnr)
 
 
 const ortDatumAusstellung = form.getTextField('Lieu et date d\'établissement29')
-ortDatumAusstellung.setText(json.frachtbriefdata.ausstellung.ort+' '+json.frachtbriefdata.ausstellung.datum.substring(0,10))
+ortDatumAusstellung.setText(json.frachtbriefdata.ausstellung.ort+' '+(json.frachtbriefdata.ausstellung.datum).slice(0, 10).split('-').reverse().join('/'))
 
+
+const bezeichnungGut = form.getTextField('Description21')
+bezeichnungGut.setText(json.frachtbriefdata.bezeichnungGut)
 
 
 const kommerzBed = form.getTextField('Conditions commerciales13')
@@ -262,6 +281,9 @@ kommerzBed.setText(json.frachtbriefdata.kommerziellebedingungen)
 
 const ubernahmeOrt = form.getTextField('Lieu2-16')
 ubernahmeOrt.setText(json.frachtbriefdata.ubernahmeort.name)
+
+const ubernahmeCode = form.getTextField('Code lieu prise charge17')
+ubernahmeCode.setText(json.frachtbriefdata.ubernahmeort.laendercode+'-'+json.frachtbriefdata.ubernahmeort.bahnhofscode)
 
 
 const ubernahmeOrtDate = form.getTextField('Mois/jour/heure')
@@ -272,7 +294,13 @@ ubernahmeOrtDate.setText(monat + tag + stunde)
 
 
 
+if (ridcheck){
 
+
+const checkBox = form.getCheckBox('RID23')
+checkBox.check()
+
+}
 
 
 const wagennummer = form.getTextField('Wagon n°0-18')
@@ -574,7 +602,7 @@ absenderTel.setText(json.frachtbriefdata.adresse1.telefon)
 
 
 const ablieferungsOrtCode = form.getTextField('DIUM12')
-ablieferungsOrtCode.setText(json.frachtbriefdata.bahnhof7.bahnhofscode)
+ablieferungsOrtCode.setText(json.frachtbriefdata.bahnhof7.laendercode + json.frachtbriefdata.bahnhof7.bahnhofscode)
 
 const ablieferungsOrtBahnhof = form.getTextField('Gare')
 ablieferungsOrtBahnhof.setText(json.frachtbriefdata.bahnhof7.name)
@@ -604,13 +632,17 @@ absenderRef2.setText(json.frachtbriefdata.refnr)
 
 
 const ortDatumAusstellung = form.getTextField('Lieu et date d\'établissement29')
-ortDatumAusstellung.setText(json.frachtbriefdata.ausstellung.ort+' '+json.frachtbriefdata.ausstellung.datum.substring(0,10))
+ortDatumAusstellung.setText(json.frachtbriefdata.ausstellung.ort+' '+(json.frachtbriefdata.ausstellung.datum).slice(0, 10).split('-').reverse().join('/'))
 
-
+const bezeichnungGut = form.getTextField('Description21')
+bezeichnungGut.setText(json.frachtbriefdata.bezeichnungGut)
 
 
 const ubernahmeOrt = form.getTextField('Lieu2-16')
 ubernahmeOrt.setText(json.frachtbriefdata.ubernahmeort.name)
+
+const ubernahmeCode = form.getTextField('Code lieu prise charge17')
+ubernahmeCode.setText(json.frachtbriefdata.ubernahmeort.laendercode+'-'+json.frachtbriefdata.ubernahmeort.bahnhofscode)
 
 
 const ubernahmeOrtDate = form.getTextField('Mois/jour/heure')
