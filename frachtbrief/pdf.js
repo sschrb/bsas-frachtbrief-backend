@@ -48,6 +48,13 @@ module.exports = {
 
 async function createFinalPDF(data) {
 
+
+  var nhmdata =  []
+ 
+
+var nhmgesamtgewicht
+
+
   var ridcheck = false;
 console.log(data)
   var json = data.frachtbriefdata.ladeliste
@@ -133,6 +140,10 @@ bruttogew: 0,
   }
 
 
+nhmdata.push({nhm: json.ladelistedata[ladegut].ladegut.nhm, summe: zwischensumme.masse.toFixed(2)})
+console.log('testarray')
+console.log(nhmdata)
+  
 
   basetable.table.body.push([{text: 'Zwischensumme:', colSpan: 4, fontSize: 8, alignment: 'right' },{},{},{}, {text: zwischensumme.liter.toFixed(2), fontSize: 8}, {text: 'n.n.', fontSize: 8}, {text: 'n.n.', fontSize: 8}, {text: zwischensumme.masse.toFixed(2), fontSize: 8}, {text: zwischensumme.tara.toFixed(2), fontSize: 8}, {text: zwischensumme.bruttogew.toFixed(2), fontSize: 8}],
   )
@@ -167,7 +178,7 @@ docDefinition1.content.push(
 
 
 }
-
+nhmdata.push({nhm: 'gesamtsumme', summe: gesamtsumme.masse.toFixed(2)})
 docDefinition1.content.push(
 ' ',
     ' ',
@@ -313,6 +324,29 @@ if(json.frachtbriefdata.type == 'CUV'){
 } else {
   radioGroupCIMCUV.select('Auswahl1')
 }
+
+let z = 0;
+for(i in nhmdata){
+  if(nhmdata[i].nhm != 'gesamtsumme'){
+    const nhmfeld = form.getTextField('NHM Code' + i)
+    nhmfeld.setText(nhmdata[i].nhm)
+
+    const masse = form.getTextField('Masse' + i)
+    masse.setText(nhmdata[i].summe)
+  }
+  z = i
+}
+
+z= z++;
+
+const massesumme = form.getTextField('Masse' + z)
+    massesumme.setText('SUMME')
+
+    z= z++;
+    const massegessumme = form.getTextField('Masse' + z)
+    massegessumme.setText(nhmdata[z].summe)
+
+
 
 
 //Frank fracht ankreuzen
@@ -526,6 +560,8 @@ fs.unlink(dateinameLadeliste, (err) => {
     console.error(err)
     return
   }} )
+
+console.log(nhmdata)
 
 return await frachtbriefService.getById(json.id);
 
