@@ -291,10 +291,10 @@ const kommerzBed = form.getTextField('Conditions commerciales13')
 kommerzBed.setText(json.frachtbriefdata.kommerziellebedingungen)
 
 const ubernahmeOrt = form.getTextField('Lieu2-16')
-ubernahmeOrt.setText(json.frachtbriefdata.ubernahmeort.name)
+ubernahmeOrt.setText(json.frachtbriefdata.ubernahmeort.bahnhof.name)
 
 const ubernahmeCode = form.getTextField('Code lieu prise charge17')
-ubernahmeCode.setText(json.frachtbriefdata.ubernahmeort.laendercode+'-'+json.frachtbriefdata.ubernahmeort.bahnhofscode)
+ubernahmeCode.setText(json.frachtbriefdata.ubernahmeort.bahnhof.laendercode+'-'+json.frachtbriefdata.ubernahmeort.bahnhof.bahnhofscode)
 
 
 const ubernahmeOrtDate = form.getTextField('Mois/jour/heure')
@@ -675,10 +675,10 @@ bezeichnungGut.setText(json.frachtbriefdata.bezeichnungGut)
 
 
 const ubernahmeOrt = form.getTextField('Lieu2-16')
-ubernahmeOrt.setText(json.frachtbriefdata.ubernahmeort.name)
+ubernahmeOrt.setText(json.frachtbriefdata.ubernahmeort.bahnhof.name)
 
 const ubernahmeCode = form.getTextField('Code lieu prise charge17')
-ubernahmeCode.setText(json.frachtbriefdata.ubernahmeort.laendercode+'-'+json.frachtbriefdata.ubernahmeort.bahnhofscode)
+ubernahmeCode.setText(json.frachtbriefdata.ubernahmeort.bahnhof.laendercode+'-'+json.frachtbriefdata.ubernahmeort.bahnhof.bahnhofscode)
 
 
 const ubernahmeOrtDate = form.getTextField('Mois/jour/heure')

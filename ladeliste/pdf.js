@@ -43,6 +43,8 @@ module.exports = {
 
 }
 
+const dateinameLadeliste = Math.random().toString(36).substring(7);
+
 async function createPDF(json) {
 var i = 1;
 
@@ -169,31 +171,42 @@ docDefinition1.content.push(
 )
 
 
-  
+  console.log(1)
   var pdfDoc = printer.createPdfKitDocument(docDefinition1)
+  pdfDoc.pipe(await fs.createWriteStream(dateinameLadeliste));
+  pdfDoc.end();
+  await sleep(2000);
+  console.log(2)
+  const existingPdfBytes = await fs.readFileSync(dateinameLadeliste)
+  const firstDonorPdfDoc = await PDFDocument.load(existingPdfBytes)
+  const pdfBytes = await firstDonorPdfDoc.save()
+  console.log(3)
+  const blob = Buffer.from(pdfBytes);
+await pdfService.create({pdf: blob})
+  .then( async (item) => {
     
+    await ladelisteService.update(json.id, {pdf_id: item.id})})
 
-  let buffers = [];
-  pdfDoc.on('data', buffers.push.bind(buffers));
-  pdfDoc.on('end', async () => {
-
-    let pdfData = Buffer.concat(buffers);
-
-    console.log(buffers)
-    console.log('#############################################################################################################')
-    console.log(pdfData)
-    await pdfService.create({pdf: pdfData})
-    .then( async (item) => {
-      
-      await ladelisteService.update(json.id, {pdf_id: item.id})})
-  
-  console.log('pdf durch')
-
-});
+console.log('pdf durch')
+console.log(dateinameLadeliste)
 
 
-//end buffer
-pdfDoc.end();
+fs.unlink(dateinameLadeliste, (err) => {
+  if (err) {
+    console.error(err)
+    return
+  }} )
+
+
+
+
+
+
+
+
+
+
+
   
 
 
@@ -220,3 +233,9 @@ fs.writeFile('test2.pdf', ausdb, function (err) {
     console.log('Replaced!');
   });
 }
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}   
