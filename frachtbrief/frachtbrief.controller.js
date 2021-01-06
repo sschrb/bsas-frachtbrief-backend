@@ -12,6 +12,7 @@ const pdf = require('./pdf');
 router.get('/pdf/:id', authorize(), getPdfById);
 router.post('/', authorize(), createSchema, create);
 router.get('/', authorize(), getAll);
+router.get('/status/:status', authorize(), getAllStatus);
 router.get('/vorlagen', authorize(), getAllVorlagen);
 router.get('/:id', authorize(), getById);
 router.put('/:id', authorize(), update);
@@ -84,6 +85,12 @@ function getAllVorlagen(req, res, next) {
 function getAll(req, res, next) {
     frachtbriefService.getAll()
         .then(frachtbrief => res.json(frachtbrief))
+        .catch(next);
+}
+
+function getAllStatus(req, res, next) {
+    frachtbriefService.getAllStatus(req.params.status)
+        .then(ladeliste => res.json(ladeliste))
         .catch(next);
 }
 
