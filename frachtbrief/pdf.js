@@ -673,6 +673,8 @@ ortDatumAusstellung.setText(json.frachtbriefdata.ausstellung.ort+' '+(json.frach
 const bezeichnungGut = form.getTextField('Description21')
 bezeichnungGut.setText(json.frachtbriefdata.bezeichnungGut)
 
+const kommerzBed = form.getTextField('Conditions commerciales13')
+kommerzBed.setText(json.frachtbriefdata.kommerziellebedingungen)
 
 const ubernahmeOrt = form.getTextField('Lieu2-16')
 ubernahmeOrt.setText(json.frachtbriefdata.ubernahmeort.bahnhof.name)

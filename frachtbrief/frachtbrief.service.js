@@ -18,6 +18,7 @@ async function getAllStatus(wert) {
     return await db.Frachtbrief.findAll({
         where: {
           status: wert
+          
         }
       });
 }
