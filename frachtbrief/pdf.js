@@ -141,8 +141,7 @@ bruttogew: 0,
 
 
 nhmdata.push({nhm: json.ladelistedata[ladegut].ladegut.nhm, summe: zwischensumme.masse.toFixed(2)})
-console.log('testarray')
-console.log(nhmdata)
+
   
 
   basetable.table.body.push([{text: 'Zwischensumme:', colSpan: 4, fontSize: 8, alignment: 'right' },{},{},{}, {text: zwischensumme.liter.toFixed(2), fontSize: 8}, {text: 'n.n.', fontSize: 8}, {text: 'n.n.', fontSize: 8}, {text: zwischensumme.masse.toFixed(2), fontSize: 8}, {text: zwischensumme.tara.toFixed(2), fontSize: 8}, {text: zwischensumme.bruttogew.toFixed(2), fontSize: 8}],
@@ -538,10 +537,6 @@ const pdfBytes = await pdfDoc.save()
 
 
 
-fs.writeFile('test3.pdf', pdfBytes, function (err) {
-  if (err) throw err;
-  console.log('Replaced!');
-});
 
 
 
@@ -551,8 +546,7 @@ await pdfService.create({pdf: blob})
     
     await frachtbriefService.update(json.id, {pdf_id_komplett: item.id})})
 
-console.log('pdf durch')
-console.log(dateinameLadeliste)
+
 
 
 fs.unlink(dateinameLadeliste, (err) => {
@@ -871,8 +865,5 @@ const ausdb = Uint8Array.from(obj.pdf);
 
  
 
-fs.writeFile('test2.pdf', ausdb, function (err) {
-    if (err) throw err;
-    console.log('Replaced!');
-  });
+
 }
