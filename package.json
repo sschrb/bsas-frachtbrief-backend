@@ -1,11 +1,10 @@
 {
-    "name": "node-mysql-registration-login-api",
+    "name": "frachtbrief-backend",
     "version": "1.0.0",
-    "description": "Node.js + MySQL API for User Management, Authentication and Registration",
+    "description": "frachtbrief-backend",
     "license": "MIT",
     "repository": {
-        "type": "git",
-        "url": "https://github.com/cornflourblue/node-mysql-registration-login-api.git"
+        "type": "git"
     },
     "scripts": {
         "start": "node ./server.js",
@@ -22,6 +21,8 @@
         "mysql2": "^2.1.0",
         "pdf-lib": "^1.14.0",
         "pdfmake": "^0.1.69",
+        "pg": "^8.5.1",
+        "pgtools": "^0.3.0",
         "rootpath": "^0.1.2",
         "sequelize": "^6.3.4"
     },
