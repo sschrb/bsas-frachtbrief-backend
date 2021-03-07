@@ -111,7 +111,7 @@ bruttogew: 0,
       headerRows: 1,
       // dontBreakRows: true,
       keepWithHeaderRows: 1,
-      widths: ['auto', 'auto', 'auto', 145,'auto', 'auto', 'auto','auto', 'auto', 'auto'],
+      widths: ['auto', 65, 'auto', 145,'auto', 'auto', 'auto','auto', 'auto', 'auto'],
       body: [
         [{text: 'Nr.', fontSize: 8}, {text: 'Wagennummer', fontSize: 8}, {text: 'Achs-\n anzahl', fontSize: 8}, {text: 'Bezeichnung des Gutes', fontSize: 8, alignment: 'center'}, {text: 'Liter', fontSize: 8}, {text: 'Dichte', fontSize: 8}, {text: 'RID', fontSize: 8}, {text: 'Masse\nLadung (kg)', fontSize: 8}, {text: 'Tara Wagen\n(kg)', fontSize: 8}, {text:'Brutto Gew.\nWagen (kg)', fontSize: 8}],
         
@@ -126,25 +126,25 @@ bruttogew: 0,
     zwischensumme.tara=json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht + zwischensumme.tara
     zwischensumme.bruttogew=((json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte)/1000) + json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht + zwischensumme.bruttogew
 
-    basetable.table.body.push( [{text: i, fontSize: 8}, {text: json.ladelistedata[ladegut].wagen[wagen].wagendaten.wagennummer, fontSize: 8},
+    basetable.table.body.push( [{text: i, fontSize: 8}, {text: formatWagennummer(json.ladelistedata[ladegut].wagen[wagen].wagendaten.wagennummer), fontSize: 8},
        {text: json.ladelistedata[ladegut].wagen[wagen].wagendaten.achsanzahl, fontSize: 8}, 
        {text: json.ladelistedata[ladegut].ladegut.bezeichnung, fontSize: 8, alignment: 'center'}, 
-       {text: json.ladelistedata[ladegut].wagen[wagen].liter, fontSize: 8}, 
+       {text: numberWithCommas(json.ladelistedata[ladegut].wagen[wagen].liter), fontSize: 8}, 
        {text: json.ladelistedata[ladegut].ladegut.dichte, fontSize: 8}, 
        {text: json.ladelistedata[ladegut].ladegut.rid, fontSize: 8}, 
-       {text: ((json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte)/1000).toFixed(2), fontSize: 8}, 
-       {text: json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht, fontSize: 8}, 
-       {text: (((json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte)/1000) + json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht).toFixed(2), fontSize: 8}],
+       {text: numberWithCommas(((json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte)/1000).toFixed(3)), fontSize: 8}, 
+       {text: numberWithCommas(json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht), fontSize: 8}, 
+       {text: numberWithCommas((((json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte)/1000) + json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht).toFixed(3)), fontSize: 8}],
 )
     i++;
   }
 
 
-nhmdata.push({nhm: json.ladelistedata[ladegut].ladegut.nhm, summe: zwischensumme.masse.toFixed(2)})
+nhmdata.push({nhm: json.ladelistedata[ladegut].ladegut.nhm, summe: numberWithCommas(zwischensumme.masse.toFixed(3))})
 
   
 
-  basetable.table.body.push([{text: 'Zwischensumme:', colSpan: 4, fontSize: 8, alignment: 'right' },{},{},{}, {text: zwischensumme.liter.toFixed(2), fontSize: 8}, {text: 'n.n.', fontSize: 8}, {text: 'n.n.', fontSize: 8}, {text: zwischensumme.masse.toFixed(2), fontSize: 8}, {text: zwischensumme.tara.toFixed(2), fontSize: 8}, {text: zwischensumme.bruttogew.toFixed(2), fontSize: 8}],
+  basetable.table.body.push([{text: 'Zwischensumme:', colSpan: 4, fontSize: 8, alignment: 'right' },{},{},{}, {text: numberWithCommas(zwischensumme.liter.toFixed(3)), fontSize: 8}, {text: 'n.n.', fontSize: 8}, {text: 'n.n.', fontSize: 8}, {text: numberWithCommas(zwischensumme.masse.toFixed(3)), fontSize: 8}, {text: numberWithCommas(zwischensumme.tara.toFixed(3)), fontSize: 8}, {text: numberWithCommas(zwischensumme.bruttogew.toFixed(3)), fontSize: 8}],
   )
   gesamtsumme.masse = zwischensumme.masse + gesamtsumme.masse
   gesamtsumme.liter = zwischensumme.liter + gesamtsumme.liter
@@ -177,7 +177,7 @@ docDefinition1.content.push(
 
 
 }
-nhmdata.push({nhm: 'gesamtsumme', summe: gesamtsumme.masse.toFixed(2)})
+nhmdata.push({nhm: 'gesamtsumme', summe: numberWithCommas(gesamtsumme.masse.toFixed(3))})
 docDefinition1.content.push(
 ' ',
     ' ',
@@ -190,7 +190,7 @@ docDefinition1.content.push(
         keepWithHeaderRows: 1,
         widths: [259, 'auto', 'auto', 'auto','auto', 42, 'auto'],
         body: [
-            [{text: 'Gesamtsumme:', fontSize: 8, alignment: 'right' }, {text: gesamtsumme.liter.toFixed(2)+'\n(I Ladung)', fontSize: 8}, {text: 'n.n.', fontSize: 8}, {text: 'n.n.', fontSize: 8}, {text: gesamtsumme.masse.toFixed(2)+'\n(kg Ladung)', fontSize: 8}, {text: gesamtsumme.tara+'\n(kg Tara)', fontSize: 8}, {text:gesamtsumme.bruttogew.toFixed(2)+'\n(kg Brutto)', fontSize: 8}],
+            [{text: 'Gesamtsumme:', fontSize: 8, alignment: 'right' }, {text: numberWithCommas(gesamtsumme.liter.toFixed(3))+'\n(I Ladung)', fontSize: 8}, {text: 'n.n.', fontSize: 8}, {text: 'n.n.', fontSize: 8}, {text: numberWithCommas(gesamtsumme.masse.toFixed(3))+'\n(kg Ladung)', fontSize: 8}, {text: numberWithCommas(gesamtsumme.tara.toFixed(3))+'\n(kg Tara)', fontSize: 8}, {text:numberWithCommas(gesamtsumme.bruttogew.toFixed(3))+'\n(kg Brutto)', fontSize: 8}],
 
                   ]
       }
@@ -235,7 +235,7 @@ absender.setText([json.frachtbriefdata.adresse1.name, json.frachtbriefdata.adres
 
 
 const absenderMail = form.getTextField('E-Mail0')
-absenderMail.setText(json.frachtbriefdata.adresse1.mail)
+absenderMail.setText("\n" + formatMail(json.frachtbriefdata.adresse1.mail))
 
 
 const absenderTel = form.getTextField('Tel0')
@@ -259,10 +259,10 @@ ablieferungsOrtLand.setText(json.frachtbriefdata.bahnhof7.land)
 
 
 const empfanger = form.getTextField('Destinataire4')
-empfanger.setText([json.frachtbriefdata.adresse2.name, json.frachtbriefdata.adresse2.strasse, json.frachtbriefdata.adresse2.ort].join('\n'))
+empfanger.setText([" ", json.frachtbriefdata.adresse2.name, json.frachtbriefdata.adresse2.strasse, json.frachtbriefdata.adresse2.ort].join('\n'))
 
 const empfangerMail = form.getTextField('E-Mail')
-empfangerMail.setText(json.frachtbriefdata.adresse2.mail)
+empfangerMail.setText("\n" + formatMail(json.frachtbriefdata.adresse2.mail))
 
 const empfangerTel = form.getTextField('Tel')
 empfangerTel.setText(json.frachtbriefdata.adresse2.telefon)
@@ -619,7 +619,7 @@ absender.setText([json.frachtbriefdata.adresse1.name, json.frachtbriefdata.adres
 
 
 const absenderMail = form.getTextField('E-Mail0')
-absenderMail.setText(json.frachtbriefdata.adresse1.mail)
+absenderMail.setText("\n" + formatMail(json.frachtbriefdata.adresse1.mail))
 
 
 const absenderTel = form.getTextField('Tel0')
@@ -642,10 +642,10 @@ ablieferungsOrtLand.setText(json.frachtbriefdata.bahnhof7.land)
 
 
 const empfanger = form.getTextField('Destinataire4')
-empfanger.setText([json.frachtbriefdata.adresse2.name, json.frachtbriefdata.adresse2.strasse, json.frachtbriefdata.adresse2.ort].join('\n'))
+empfanger.setText([" ",json.frachtbriefdata.adresse2.name, json.frachtbriefdata.adresse2.strasse, json.frachtbriefdata.adresse2.ort].join('\n'))
 
 const empfangerMail = form.getTextField('E-Mail')
-empfangerMail.setText(json.frachtbriefdata.adresse2.mail)
+empfangerMail.setText("\n" + formatMail(json.frachtbriefdata.adresse2.mail))
 
 const empfangerTel = form.getTextField('Tel')
 empfangerTel.setText(json.frachtbriefdata.adresse2.telefon)
@@ -866,4 +866,21 @@ const ausdb = Uint8Array.from(obj.pdf);
  
 
 
+}
+
+function formatWagennummer(wagennummer){
+  var wagennummer2 = wagennummer.slice(0, 4) + " " + wagennummer.slice(4, 8) + " " + wagennummer.slice(8, 11) + "-" + wagennummer.slice(11);
+
+
+  return wagennummer2
+
+}
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+function formatMail(x){
+  if(x.length <= 27) return x
+  else{
+    return x.slice(0,27) + "\n" + x.slice(27)
+  }
 }
