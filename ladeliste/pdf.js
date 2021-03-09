@@ -104,8 +104,8 @@ var zwischensumme = {
       basetable.table.body.push( [{text: i, fontSize: 8}, {text: formatWagennummer(json.ladelistedata[ladegut].wagen[wagen].wagendaten.wagennummer), fontSize: 8},
          {text: json.ladelistedata[ladegut].wagen[wagen].wagendaten.achsanzahl, fontSize: 8}, 
          {text: json.ladelistedata[ladegut].ladegut.bezeichnung, fontSize: 8, alignment: 'center'}, 
-         {text: numberWithCommas(json.ladelistedata[ladegut].wagen[wagen].liter), fontSize: 8}, 
-         {text: json.ladelistedata[ladegut].ladegut.dichte, fontSize: 8}, 
+         {text: numberWithCommas((json.ladelistedata[ladegut].ladegut.dichte==1000 ? '': json.ladelistedata[ladegut].wagen[wagen].liter)), fontSize: 8}, 
+         {text: numberWithCommas((json.ladelistedata[ladegut].ladegut.dichte==1000 ? '': json.ladelistedata[ladegut].ladegut.dichte)), fontSize: 8}, 
          {text: json.ladelistedata[ladegut].ladegut.rid, fontSize: 8}, 
          {text: numberWithCommas((((json.ladelistedata[ladegut].wagen[wagen].liter*json.ladelistedata[ladegut].ladegut.dichte)/1000).toFixed(3))), fontSize: 8}, 
          {text: numberWithCommas(json.ladelistedata[ladegut].wagen[wagen].wagendaten.eigengewicht), fontSize: 8}, 
@@ -241,7 +241,7 @@ function sleep(ms) {
 }   
 
 function formatWagennummer(wagennummer){
-  var wagennummer2 = wagennummer.slice(0, 4) + " " + wagennummer.slice(4, 8) + " " + wagennummer.slice(8, 11) + "-" + wagennummer.slice(11);
+  var wagennummer2 = wagennummer.slice(0,2) + " " + wagennummer.slice(2, 4) + " " + wagennummer.slice(4, 8) + " " + wagennummer.slice(8, 11) + "-" + wagennummer.slice(11);
 
 
   return wagennummer2
@@ -251,5 +251,5 @@ function formatWagennummer(wagennummer){
 
 
 function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return x.toString().replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }

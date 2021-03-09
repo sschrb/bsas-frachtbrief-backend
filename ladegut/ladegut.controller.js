@@ -39,6 +39,7 @@ function createSchema(req, res, next) {
         bemerkung: Joi.string().required().allow(''),
         dichte: Joi.string().required().allow(''),
         rid: Joi.string().required().allow(''),
+        einheit: Joi.string().required().allow(''),
         nhm: Joi.string().required().allow(''),
         wagentyp: Joi.string().required().allow(''),
 

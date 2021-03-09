@@ -8,6 +8,7 @@ function model(sequelize) {
         bemerkung: { type: DataTypes.STRING, allowNull: true },
         dichte: { type: DataTypes.FLOAT, allowNull: true },
         rid: { type: DataTypes.STRING, allowNull: true },
+        einheit: { type: DataTypes.STRING, allowNull: true },
         nhm: { type: DataTypes.STRING, allowNull: true },
         wagentyp: { type: DataTypes.STRING, allowNull: true }
         
