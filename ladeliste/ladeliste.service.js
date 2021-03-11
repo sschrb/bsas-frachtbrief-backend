@@ -9,6 +9,7 @@ module.exports = {
     getById,
     getAllStatus,
     create,
+    getAllVorlagen,
     update,
     delete: _delete
 };
@@ -17,6 +18,14 @@ async function getAllStatus(wert) {
     return await db.Ladeliste.findAll({
         where: {
           status: wert
+        }
+      });
+}
+
+async function getAllVorlagen() {
+    return await db.Ladeliste.findAll({
+        where: {
+          vorlage: 'true'
         }
       });
 }

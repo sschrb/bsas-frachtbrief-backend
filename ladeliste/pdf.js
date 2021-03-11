@@ -86,7 +86,7 @@ var zwischensumme = {
         headerRows: 1,
         // dontBreakRows: true,
         keepWithHeaderRows: 1,
-        widths: ['auto', 65, 'auto', 145,'auto', 'auto', 'auto','auto', 'auto', 'auto'],
+        widths: ['auto', 65, 'auto', 105,'auto', 'auto', 'auto','auto', 'auto', 'auto'],
         body: [
           [{text: 'Nr.', fontSize: 8}, {text: 'Wagennummer', fontSize: 8}, {text: 'Achs.', fontSize: 8}, {text: 'Bezeichnung des Gutes', fontSize: 8, alignment: 'center'}, {text: 'Liter', fontSize: 8}, {text: 'Dichte', fontSize: 8}, {text: 'RID', fontSize: 8}, {text: 'Masse\nLadung (kg)', fontSize: 8}, {text: 'Tara Wagen\n(kg)', fontSize: 8}, {text:'Brutto Gew.\nWagen (kg)', fontSize: 8}],
           
@@ -160,7 +160,7 @@ docDefinition1.content.push(
           headerRows: 1,
           // dontBreakRows: true,
           keepWithHeaderRows: 1,
-          widths: [259, 'auto', 'auto', 'auto','auto', 42, 'auto'],
+          widths: [225, 'auto', 'auto', 'auto','auto', 42, 'auto'],
           body: [
               [{text: 'Gesamtsumme:', fontSize: 8, alignment: 'right' }, {text: numberWithCommas(gesamtsumme.liter.toFixed(3))+'\n(I Ladung)', fontSize: 8}, {text: 'n.n.', fontSize: 8}, {text: 'n.n.', fontSize: 8}, {text: numberWithCommas(gesamtsumme.masse.toFixed(3))+'\n(kg Ladung)', fontSize: 8}, {text: numberWithCommas(gesamtsumme.tara.toFixed(3))+'\n(kg Tara)', fontSize: 8}, {text:numberWithCommas(gesamtsumme.bruttogew.toFixed(3))+'\n(kg Brutto)', fontSize: 8}],
   

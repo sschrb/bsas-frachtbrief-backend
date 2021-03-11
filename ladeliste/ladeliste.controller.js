@@ -13,6 +13,7 @@ router.get('/pdf/:id', authorize(), getPdfById);
 router.post('/', authorize(), createSchema, create);
 router.get('/', authorize(), getAll);
 router.get('/status/:status', authorize(), getAllStatus);
+router.get('/vorlagen', authorize(), getAllVorlagen);
 router.get('/:id', authorize(), getById);
 router.put('/:id', authorize(), update);
 
@@ -67,6 +68,12 @@ function createPdf(req, res, next) {
 
 function getAllStatus(req, res, next) {
     ladelisteService.getAllStatus(req.params.status)
+        .then(ladeliste => res.json(ladeliste))
+        .catch(next);
+}
+
+function getAllVorlagen(req, res, next) {
+    ladelisteService.getAllVorlagen()
         .then(ladeliste => res.json(ladeliste))
         .catch(next);
 }
