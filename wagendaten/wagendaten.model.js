@@ -6,7 +6,7 @@ function model(sequelize) {
     const attributes = {
         wagennummer: { type: DataTypes.BIGINT, allowNull: false },
         halter: { type: DataTypes.STRING, allowNull: true },
-        achsanzahl: { type: DataTypes.INTEGER, allowNull: true },
+        achsanzahl: { type: DataTypes.STRING, allowNull: true },
         eigengewicht: { type: DataTypes.INTEGER, allowNull: true }
         
     };
